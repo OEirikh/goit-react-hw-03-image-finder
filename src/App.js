@@ -1,4 +1,4 @@
-import "./App.css";
+import s from "./App.module.css";
 import { Component } from "react";
 import { ToastContainer } from "react-toastify";
 
@@ -16,11 +16,11 @@ class App extends Component {
 
   render() {
     return (
-      <>
+      <div className={s.App}>
         <SearchBar onSubmit={this.hendleSearchBarSubmit} />
         <ImageGallery query={this.state.query} />
         <ToastContainer autoClose={2500} />
-      </>
+      </div>
     );
   }
 }
