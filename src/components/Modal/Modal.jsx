@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import s from "./Modal.module.css";
 
 class Modal extends Component {
@@ -17,7 +18,8 @@ class Modal extends Component {
   }
 
   render() {
-    const { modalImg, handleTogleModal } = this.props;
+    const { modalImg, handleTogleModal, tag } = this.props;
+    console.log(modalImg);
     return (
       <div
         className={s.Overlay}
@@ -28,11 +30,17 @@ class Modal extends Component {
         }}
       >
         <div className={s.Modal}>
-          <img src={modalImg} alt="" />
+          <img src={modalImg} alt={tag} />
         </div>
       </div>
     );
   }
 }
+
+Modal.propTypes = {
+  modalImg: PropTypes.string.isRequired,
+  handleTogleModal: PropTypes.func.isRequired,
+  tag: PropTypes.string.isRequired,
+};
 
 export default Modal;

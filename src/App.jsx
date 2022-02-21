@@ -2,9 +2,8 @@ import s from "./App.module.css";
 import { Component } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
 import { Audio } from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import Searchbar from "./components/Searchbar";
 import ImageGallery from "./components/ImageGallery";
@@ -16,10 +15,11 @@ class App extends Component {
   state = {
     query: "",
     page: 1,
+    images: [],
     isPending: false,
     isModalOpen: false,
-    images: [],
     modalImg: "",
+    modalAlt: "",
   };
 
   handleSetQuery = ({ target: { name, value } }) => {
@@ -37,30 +37,36 @@ class App extends Component {
     this.setState({ isPending: true, page: 1 });
   };
 
-  handleTogleModal = (image) => {
+  handleTogleModal = (image, alt) => {
     this.setState((prev) => ({
       isModalOpen: !prev.isModalOpen,
       modalImg: image,
+      modalAlt: alt,
     }));
   };
 
-  handleLoadMore = (e) => {
+  handleLoadMore = () => {
     this.setState((prev) => ({ page: prev.page + 1, isPending: true }));
   };
 
   componentDidUpdate() {
     if (this.state.isPending) {
-      fetchImages(this.state.query, this.state.page).then((img) => {
-        this.setState((prev) => ({
-          images: this.state.page > 1 ? [...prev.images, ...img] : img,
-          isPending: false,
-        }));
-      });
+      fetchImages(this.state.query, this.state.page)
+        .then((img) => {
+          this.setState((prev) => ({
+            images: this.state.page > 1 ? [...prev.images, ...img] : img,
+            isPending: false,
+          }));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
 
   render() {
-    const { isModalOpen, images, query, modalImg, isPending } = this.state;
+    const { query, images, isPending, isModalOpen, modalImg, modalAlt } =
+      this.state;
     const {
       handleSetQuery,
       handleSubmitForm,
@@ -81,7 +87,11 @@ class App extends Component {
         )}
         {images.length >= 12 && <Button handleLoadMore={handleLoadMore} />}
         {isModalOpen && (
-          <Modal modalImg={modalImg} handleTogleModal={handleTogleModal} />
+          <Modal
+            modalImg={modalImg}
+            handleTogleModal={handleTogleModal}
+            tag={modalAlt}
+          />
         )}
         <ToastContainer autoClose={2500} />
       </div>

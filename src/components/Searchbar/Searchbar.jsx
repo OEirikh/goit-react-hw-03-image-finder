@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import s from "./Searchbar.module.css";
 
 const Searchbar = ({ query, handleSetQuery, handleSubmitForm }) => {
@@ -22,6 +23,12 @@ const Searchbar = ({ query, handleSetQuery, handleSubmitForm }) => {
       </form>
     </header>
   );
+};
+
+Searchbar.propTypes = {
+  query: PropTypes.string.isRequired,
+  handleSetQuery: PropTypes.func.isRequired,
+  handleSubmitForm: PropTypes.func.isRequired,
 };
 
 export default Searchbar;
