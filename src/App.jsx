@@ -2,6 +2,9 @@ import s from "./App.module.css";
 import { Component } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
+import { Audio } from "react-loader-spinner";
 
 import Searchbar from "./components/Searchbar";
 import ImageGallery from "./components/ImageGallery";
@@ -57,7 +60,7 @@ class App extends Component {
   }
 
   render() {
-    const { isModalOpen, images, query, modalImg } = this.state;
+    const { isModalOpen, images, query, modalImg, isPending } = this.state;
     const {
       handleSetQuery,
       handleSubmitForm,
@@ -71,7 +74,11 @@ class App extends Component {
           handleSetQuery={handleSetQuery}
           handleSubmitForm={handleSubmitForm}
         />
-        <ImageGallery handleTogleModal={handleTogleModal} images={images} />
+        {!isPending ? (
+          <ImageGallery handleTogleModal={handleTogleModal} images={images} />
+        ) : (
+          <Audio height="100" width="100" color="grey" ariaLabel="loading" />
+        )}
         {images.length >= 12 && <Button handleLoadMore={handleLoadMore} />}
         {isModalOpen && (
           <Modal modalImg={modalImg} handleTogleModal={handleTogleModal} />
