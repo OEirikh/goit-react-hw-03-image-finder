@@ -5,7 +5,7 @@ import s from "./Modal.module.css";
 class Modal extends Component {
   onCloseModalByEsc = (e) => {
     if (e.keyCode === 27) {
-      this.props.handleTogleModal("");
+      this.props.handleTogleModal();
     }
   };
 
@@ -25,7 +25,7 @@ class Modal extends Component {
         className={s.Overlay}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
-            handleTogleModal("");
+            handleTogleModal();
           }
         }}
       >

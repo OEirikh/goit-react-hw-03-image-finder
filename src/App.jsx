@@ -2,7 +2,7 @@ import s from "./App.module.css";
 import { Component } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Audio } from "react-loader-spinner";
+import { MutatingDots } from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import Searchbar from "./components/Searchbar";
@@ -34,7 +34,7 @@ class App extends Component {
         hideProgressBar: true,
       });
     }
-    this.setState({ isPending: true, page: 1 });
+    this.setState({ page: 1, isPending: true });
   };
 
   handleTogleModal = (image, alt) => {
@@ -50,16 +50,29 @@ class App extends Component {
   };
 
   componentDidUpdate() {
-    if (this.state.isPending) {
-      fetchImages(this.state.query, this.state.page)
+    const { query, page, isPending } = this.state;
+    if (isPending) {
+      fetchImages(query, page)
         .then((img) => {
+          if (img.length === 0) {
+            return (
+              this.setState({ isPending: false }),
+              toast(
+                `Ypss!!! No results were found for "${query}", please edit your query.`,
+                {
+                  position: "top-center",
+                  hideProgressBar: true,
+                }
+              )
+            );
+          }
           this.setState((prev) => ({
-            images: this.state.page > 1 ? [...prev.images, ...img] : img,
+            images: page > 1 ? [...prev.images, ...img] : img,
             isPending: false,
           }));
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.massage);
         });
     }
   }
@@ -73,6 +86,7 @@ class App extends Component {
       handleTogleModal,
       handleLoadMore,
     } = this;
+
     return (
       <div className={s.App}>
         <Searchbar
@@ -80,11 +94,10 @@ class App extends Component {
           handleSetQuery={handleSetQuery}
           handleSubmitForm={handleSubmitForm}
         />
-        {!isPending ? (
+        {images.length >= 1 && (
           <ImageGallery handleTogleModal={handleTogleModal} images={images} />
-        ) : (
-          <Audio height="100" width="100" color="grey" ariaLabel="loading" />
         )}
+        {isPending && <MutatingDots ariaLabel="loading" />}
         {images.length >= 12 && <Button handleLoadMore={handleLoadMore} />}
         {isModalOpen && (
           <Modal
